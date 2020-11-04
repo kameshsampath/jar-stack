@@ -6,6 +6,7 @@ import java.time.Instant;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 @ApplicationScoped
@@ -15,11 +16,11 @@ public class FruitService {
   Event<ExportedEvent<?, ?>> event;
 
   @Inject
-  FruitRepository fruitRepository;
+  EntityManager fruitRepository;
 
   @Transactional
   public FruitEntity addFruit(FruitEntity fruitEntity) {
-    fruitEntity = fruitRepository.save(fruitEntity);
+    fruitRepository.persist(fruitEntity);
     event.fire(new FruitCreatedEvent(Instant.now(), fruitEntity));
     return null;
   }
