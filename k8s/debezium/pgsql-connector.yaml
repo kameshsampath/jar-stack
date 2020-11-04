@@ -1,0 +1,24 @@
+---
+kind: KafkaConnector
+apiVersion: kafka.strimzi.io/v1alpha1
+metadata:
+  # format dbkind-dbname-connector
+  name: pgsql-demodb-connector
+  labels:
+    # must match KafkaConnect cluster name
+    strimzi.io/cluster: my-cluster-debezium
+spec:
+  tasksMax: 1
+  class: io.debezium.connector.postgresql.PostgresConnector
+  config:
+    database.hostname: "postgresql"
+    database.port: "5432"
+    database.dbname: "${file:/opt/kafka/external-configuration/connector-config/postgresql-connection.properties:pgsql_db}"
+    database.user: "${file:/opt/kafka/external-configuration/connector-config/postgresql-connection.properties:pgsql_username}"
+    database.password: "${file:/opt/kafka/external-configuration/connector-config/postgresql-connection.properties:pgsql_password}"
+    database.server.id: "184054"
+    database.server.name: "minikube"
+    database.include.list: "${file:/opt/kafka/external-configuration/connector-config/postgresql-connection.properties:pgsql_db}"
+    database.history.kafka.bootstrap.servers: "my-cluster-kafka-bootstrap:9092"
+    database.history.kafka.topic: "schema-changes.demodb"
+    table.include.list: "public.fruit"

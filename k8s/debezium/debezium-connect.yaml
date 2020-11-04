@@ -1,0 +1,46 @@
+---
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaConnect
+metadata:
+  name: my-cluster-debezium
+  annotations:
+    # enable connect operator
+    strimzi.io/use-connector-resources: "true"
+spec:
+  replicas: 1
+  version: 2.5.0
+  image: quay.io/kameshsampath/debezium-connect
+  imagePullPolicy: Always
+  bootstrapServers: my-cluster-kafka-bootstrap:9093
+  tls:
+    trustedCertificates:
+      - secretName: my-cluster-cluster-ca-cert
+        certificate: ca.crt
+#  resources:
+#    requests:
+#      memory: "2Gi"
+#    limits:
+#      memory: "4Gi"
+  jvmOptions:
+    gcLoggingEnabled: false
+  config:
+    group.id: fruitsapp.my-cluster-debezium
+    config.storage.replication.factor: 1
+    offset.storage.replication.factor: 1
+    status.storage.replication.factor: 1
+    config.providers: file
+    # load the secrets as file postgresql-connection.properties
+    config.providers.file.class: org.apache.kafka.common.config.provider.FileConfigProvider
+    # Avro
+    key.converter: io.apicurio.registry.utils.converter.AvroConverter
+    key.converter.apicurio.registry.url: http://apicurio-registry:8080/api
+    key.converter.apicurio.registry.global-id: io.apicurio.registry.utils.serde.strategy.GetOrCreateIdStrategy
+    value.converter: io.apicurio.registry.utils.converter.AvroConverter
+    value.converter.apicurio.registry.url: http://apicurio-registry:8080/api
+    value.converter.apicurio.registry.global-id: io.apicurio.registry.utils.serde.strategy.GetOrCreateIdStrategy
+  externalConfiguration:
+    externalConfiguration:
+    volumes:
+      - name: connector-config
+        secret:
+          secretName: pgsql-credentials

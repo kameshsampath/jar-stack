@@ -1,0 +1,10 @@
+{
+  "namespace": "dev.kameshs.fruit.data",
+  "type": "record",
+   "name": "Fruit",
+  "fields": [
+    {"name": "id","type": "long"},
+    {"name": "name","type": "string"},
+    {"name":  "season","type":  "string"}
+  ]
+}

@@ -1,0 +1,98 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+    ansible_python_interpreter: '{{ ansible_playbook_python }}'
+    plugins_dir: /tmp/debezium-connectors
+    plugins_deps_dir: /tmp/plugin-deps
+    plugins_unpack_dir: "/opt/kafka/plugins/debezium"
+    plugins_deps_unpack_dir: "/opt/kafka/external_libs"
+    plugins:
+      - name: "debezium-connector-mysql"
+        url: "https://repo1.maven.org/maven2/io/debezium/debezium-connector-mysql/1.3.0.Final/debezium-connector-mysql-1.3.0.Final-plugin.tar.gz"
+      - name: "debezium-connector-postgresql"
+        url: "https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/1.3.0.Final/debezium-connector-postgres-1.3.0.Final-plugin.tar.gz"
+    plugin_deps:
+      - name: "debezium-apicurio-registry-connector"
+        url: "https://repo1.maven.org/maven2/io/apicurio/apicurio-registry-distro-connect-converter/1.3.0.Final/apicurio-registry-distro-connect-converter-1.3.0.Final-converter.tar.gz"
+  tasks:
+    - name: Make directories
+      file:
+        path: "{{ item }}"
+        state: directory
+      with_items:
+        - "{{ plugins_dir }}"
+        - "{{ plugins_unpack_dir }}"
+        - "{{ plugins_deps_dir }}"
+        - "{{ plugins_deps_unpack_dir }}"
+
+    - name: Download plugins
+      get_url:
+        url: "{{ item.url }}"
+        dest: "{{ plugins_dir }}/{{ item.name }}"
+      with_items:
+        - "{{ plugins }}"
+      loop_control:
+        label: "{{item.name}}"
+
+    - name: Download plugins dependencies
+      get_url:
+        url: "{{ item.url }}"
+        dest: "{{ plugins_deps_dir }}/{{ item.name }}"
+      with_items:
+        - "{{ plugin_deps }}"
+      loop_control:
+        label: "{{item.name}}"
+
+    - name: Extract Plugins
+      unarchive:
+        src: "{{ plugins_dir }}/{{ item.name }}"
+        dest: "{{ plugins_unpack_dir }}"
+      with_items: "{{ plugins }}"
+      loop_control:
+        label: "{{item.name}}"
+
+
+    - name: Extract Plugins Deps
+      unarchive:
+        src: "{{ plugins_deps_dir }}/{{ item.name }}"
+        dest: "{{ plugins_deps_unpack_dir }}"
+      with_items: "{{ plugin_deps }}"
+      loop_control:
+        label: "{{item.name}}"
+
+    - name: All Plugins
+      find:
+        paths: "{{plugins_unpack_dir}}"
+        patterns: "*"
+        file_type: directory
+      register: plugins_dirs
+      tags:
+        - link
+
+    - name: All libs
+      find:
+        paths: "{{plugins_deps_unpack_dir}}"
+        patterns: "**"
+      register: libs
+      tags:
+        - link
+
+#    - debug: msg="{{item.path}}"
+#      with_items:
+#        - "{{libs.files}}"
+#      tags:
+#        - link
+    - name: Link lib to Plugins
+      file:
+        state: link
+        src: "{{ item.0.path }}"
+        dest: "{{ item.1.path }}/{{ item.0.path | basename }}"
+        force: yes
+      with_nested:
+        - "{{libs.files}}"
+        - "{{plugins_dirs.files}}"
+      loop_control:
+        label: "{{ item.0.path | basename }}"
+      tags:
+        - link

@@ -1,0 +1,9 @@
+---
+namespace: fruits-app
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+resources:
+ - apicurio-deployment.yaml
+ - apicurio-service.yaml

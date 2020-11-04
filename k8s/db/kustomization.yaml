@@ -1,0 +1,18 @@
+---
+namespace: fruits-app
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+secretGenerator:
+ # for resources that can read file
+ - name: pgsql-credentials
+   files:
+    - postgresql-connection.properties
+ # for resources that needs specific values
+ - name: psql-env
+   env: postgresql-connection.properties
+
+resources:
+ - postgresql-deployment.yaml
+ - postgresql-service.yaml

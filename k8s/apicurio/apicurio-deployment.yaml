@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: apicurio-registry
+  name: apicurio-registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apicurio-registry
+  template:
+    metadata:
+      labels:
+        app: apicurio-registry
+        deploymentconfig: apicurio-registry
+    spec:
+      containers:
+      - env:
+        - name: QUARKUS_DATASOURCE_URL
+          valueFrom:
+            secretKeyRef:
+              name: psql-env
+              key: pgsql_jdbc_url
+        - name: QUARKUS_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: psql-env
+              key: pgsql_username
+        - name: QUARKUS_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: psql-env
+              key: pgsql_password
+        image: apicurio/apicurio-registry-jpa
+        imagePullPolicy: IfNotPresent
+        name: apicurio-registry
+        ports:
+        - containerPort: 8778
+          protocol: TCP
+        - containerPort: 9779
+          protocol: TCP
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
