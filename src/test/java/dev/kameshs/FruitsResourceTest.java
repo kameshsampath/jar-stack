@@ -9,13 +9,14 @@ import static org.hamcrest.CoreMatchers.is;
 @QuarkusTest
 public class FruitsResourceTest {
 
-    @Test
-    public void testHelloEndpoint() {
-        given()
-          .when().get("/api/fruits/")
-          .then()
-             .statusCode(200)
-             .body(is("apple"));
-    }
+  @Test
+  public void testReadiness() {
+    given()
+        .when()
+        .get("/health/ready/")
+        .then()
+        .statusCode(200)
+        .body("status", is("UP"));
+  }
 
 }
