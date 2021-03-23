@@ -6,4 +6,4 @@ metadata:
 spec:
   type: ExternalName
   # Managed Database Host Name
-  externalName: <Managed Database Host Name>
+  externalName:  <Managed Database Host Name>
