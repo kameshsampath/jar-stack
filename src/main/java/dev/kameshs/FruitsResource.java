@@ -20,6 +20,14 @@ public class FruitsResource {
     String defaultFruit;
 
     @GET
+    @Path("/default")
+    public Response defaultFruit() {
+        return Response
+            .ok(defaultFruit)
+            .build();
+    }
+
+    @GET
     @Path("/fruits")
     public Response fruits() {
         return Response
