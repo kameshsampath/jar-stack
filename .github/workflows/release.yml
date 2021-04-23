@@ -67,11 +67,13 @@ jobs:
 
             console.log("Context ->  %s",JSON.stringify(context))
 
-             const { data } = await octokit.request('GET /repos/${context.repo.owner}/${context.repo.repo}/releases/tags/{tag}', {
+             const { data } = await github.request('GET /repos/${context.repo.owner}/${context.repo.repo}/releases/tags/{tag}', {
                tag: TAG_NAME
              }).catch(err => {
                console.error("Error getting release %s", JSON.stringify(err.errors))
              })
+
+             console.log("Release ->  %s",JSON.stringify(data))
 
              const upload_url = data.upload_url
 
