@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.4](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.3...v0.1.4) (2021-04-23)
+
+
+### Bug Fixes
+
+* use github ref over octokit ([bb75b94](https://www.github.com/kameshsampath/fruits-app/commit/bb75b94d94e4d3d6f4acd70b30c80dcc756aa516))
+
 ### [0.1.3](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.2...v0.1.3) (2021-04-23)
 
 
