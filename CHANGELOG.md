@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.3](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.2...v0.1.3) (2021-04-23)
+
+
+### Bug Fixes
+
+* use tarball ([a3b1f18](https://www.github.com/kameshsampath/fruits-app/commit/a3b1f182c6d9146b67db6eb2e4eab88fb5ee6063))
+
 ### [0.1.2](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.1...v0.1.2) (2021-04-23)
 
 
