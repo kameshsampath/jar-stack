@@ -1,5 +1,13 @@
 # Changelog
 
+### [0.1.11](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.10...v0.1.11) (2021-04-23)
+
+
+### Bug Fixes
+
+* define and use asset name ([75794c6](https://www.github.com/kameshsampath/fruits-app/commit/75794c66c8ed279e17e88fe1d294768b96ba9287))
+* trigger ([be66ec4](https://www.github.com/kameshsampath/fruits-app/commit/be66ec47a50a3e8752115da702307879cd85d562))
+
 ### [0.1.10](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.9...v0.1.10) (2021-04-23)
 
 
