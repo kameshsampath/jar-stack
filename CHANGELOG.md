@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.8](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.7...v0.1.8) (2021-04-23)
+
+
+### Bug Fixes
+
+* artifact id param ([11fd7cb](https://www.github.com/kameshsampath/fruits-app/commit/11fd7cb082ea8c1c3d9010f54c75db1845621645))
+
 ### [0.1.7](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.6...v0.1.7) (2021-04-23)
 
 
