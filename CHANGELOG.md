@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.7](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.6...v0.1.7) (2021-04-23)
+
+
+### Bug Fixes
+
+* correct the REST path for upload ([e05b463](https://www.github.com/kameshsampath/fruits-app/commit/e05b4630e6f66e6ff58b0d0bb577e1a1be70d151))
+
 ### [0.1.6](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.5...v0.1.6) (2021-04-23)
 
 
