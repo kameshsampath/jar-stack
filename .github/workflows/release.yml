@@ -45,9 +45,9 @@ jobs:
       - name: "Quarkus App Tar ball"
         id: create-distro
         env:
-          ARTIFACT_ID: "${{ steps.build-with-maven.outputs.artifact_id }}"
+          ARTIFACT_ID: "${{ steps.build-with-maven.outputs.artifact-id }}"
         run: |
-          TAR_FILE="${{ github.workspace }}/$ARTIFACT_VERSION.tar.gz"
+          TAR_FILE="${{ github.workspace }}/$ARTIFACT_ID.tar.gz"
           cd target \
             && tar -cvzf $TAR_FILE lib *-runner*
           echo "::set-output name=asset-name::${TAR_FILE}"
@@ -90,6 +90,7 @@ jobs:
               data: fs.readFileSync(ASSET_FILE)
              }).catch(err => {
                console.log("Error uploading asset %s", err)
+               exit 1
              })
 
              console.log("Asset upload --> %s ",uploadAsset)
