@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.2](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.1...v0.1.2) (2021-04-23)
+
+
+### Bug Fixes
+
+* function error ([f1e87da](https://www.github.com/kameshsampath/fruits-app/commit/f1e87da79bae0b312b38e463f2043ceb4dc3dc99))
+
 ### [0.1.1](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.0...v0.1.1) (2021-04-23)
 
 
