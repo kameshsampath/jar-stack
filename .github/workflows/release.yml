@@ -64,10 +64,14 @@ jobs:
             const fs = require('fs')
             const {TAG_NAME} = process.env
             const {ASSET_FILE} = process.env
+            const {payload} = context
 
-            console.log("Context ->  %s",JSON.stringify(context))
+            const owner = payload.repository.owner.login
+            const repo =  payload.repository.name
 
-             const { data } = await github.request('GET /repos/${context.repo.owner}/${context.repo.repo}/releases/tags/{tag}', {
+            console.log("Context Repository %s and Owner is %s",repo,owner)
+
+             const { data } = await github.request(`GET /repos/${owner}/${repo}/releases/tags/{tag}`, {
                tag: TAG_NAME
              }).catch(err => {
                console.error("Error getting release %s", JSON.stringify(err.errors))
