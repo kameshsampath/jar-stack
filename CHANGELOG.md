@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.6](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.5...v0.1.6) (2021-04-23)
+
+
+### Bug Fixes
+
+* typos ([0c75e34](https://www.github.com/kameshsampath/fruits-app/commit/0c75e342af2eb815f3ef34e8c7530a503412e465))
+
 ### [0.1.5](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.4...v0.1.5) (2021-04-23)
 
 
