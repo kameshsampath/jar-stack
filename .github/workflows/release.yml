@@ -6,9 +6,8 @@ on:
       - "released"
 
 jobs:
-  build:
+  build-and-release:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
         with:
@@ -38,43 +37,45 @@ jobs:
           echo "POM Version $pom_version"
           artifact_id=$(./mvnw org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -q \
                         -Dexpression=project.build.finalName -DforceStdout)
-          artifact="$artifact-runner.jar"
-          echo "Artifact $artifact"
+          artifact="$artifact_id-runner.jar"
+          echo "Project Artifact $artifact"
           echo "::set-output name=jar-asset::$artifact"
-      
+
       - name: "Attach Artifacts to Release"
         uses: actions/github-script@v4.0.1
+        env:
+          TAG_NAME: ${{ github.event.tag_name }}
+          ASSET_FILE: "target/${{ steps.build-with-maven.outputs.jar-asset }}"
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-             const fs = require('fs')
-             
-             console.log("Context ->  %s",JSON.stringfy(context))
+            const fs = require('fs')
+            const {TAG_NAME} = process.env
+            const {ASSET_FILE} = process.env
+            
+            console.log("Context ->  %s",JSON.stringfy(context))
 
-              const { data } = await octokit.request('GET /repos/${context.repo.owner}/${context.repo.repo}/releases/tags/{tag}', {
-                tag: "${{ github.event.tag_name }}"
-              }).catch(err => {
-                console.error("Error getting release %s", JSON.stringify(err.errors))
-              })
+             const { data } = await octokit.request('GET /repos/${context.repo.owner}/${context.repo.repo}/releases/tags/{tag}', {
+               tag: TAG_NAME
+             }).catch(err => {
+               console.error("Error getting release %s", JSON.stringify(err.errors))
+             })
 
-              const upload_url = data.upload_url
-              
-              const filePath = "target/${{ steps.build-with-maven.outputs.jar-asset }}"
-              const contentLength = fs.statSync(filePath).size;
-              console.log("%s Content length=%s", filePath, contentLength)
+             const upload_url = data.upload_url
 
-              const uploadAsset = await github.rest.repos.uploadReleaseAsset({
-              url: upload_url,
-              name: '${{ steps.build-with-maven.outputs.jar-asset }}',
-              headers: {
-                "content-type": "application/zip",
-                "content-length": contentLength,
-              },
-              data: fs.readFileSync(filePath)
-              }).catch(err => {
-                console.log("Error uploading asset %s", err)
-              })
+             const contentLength = fs.statSync(ASSET_FILE).size;
+             console.log("%s Content length=%s", ASSET_FILE, contentLength)
 
-              console.log("Asset upload --> "uploadAsset)
+             const uploadAsset = await github.rest.repos.uploadReleaseAsset({
+             url: upload_url,
+             name: '${{ steps.build-with-maven.outputs.jar-asset }}',
+             headers: {
+               "content-type": "application/zip",
+               "content-length": contentLength,
+             },
+             data: fs.readFileSync(ASSET_FILE)
+             }).catch(err => {
+               console.log("Error uploading asset %s", err)
+             })
 
-          
+             console.log("Asset upload --> %s ",uploadAsset)
