@@ -90,7 +90,6 @@ jobs:
               data: fs.readFileSync(ASSET_FILE)
              }).catch(err => {
                console.log("Error uploading asset %s", err)
-               exit 1
              })
 
-             console.log("Asset upload --> %s ",uploadAsset)
+            console.log("Asset upload --> %s ",uploadAsset)
