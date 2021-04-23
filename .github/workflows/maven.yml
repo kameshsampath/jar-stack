@@ -29,5 +29,14 @@ jobs:
         path: ~/.m2
         # An explicit key for restoring and saving the cache
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml' )}}
+        
     - name: Build with Maven
       run: mvn -B -DskipTests install --file pom.xml
+    
+    - name: Create Release
+      uses: google-github-actions/release-please-action@v2.19.2
+      with:
+        # GitHub token for creating and grooming release PRs, defaults to using secrets.GITHUB_TOKEN
+        token: ${{ secrets.GH_WORKFLOW_PAT }}
+        bump-minor-pre-major: true
+        release-type: simple
