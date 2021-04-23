@@ -56,6 +56,7 @@ jobs:
         uses: actions/github-script@v4.0.1
         env:
           TAG_NAME: ${{ github.event.release.tag_name }}
+          ASSET_NAME: ${{ steps.build-with-maven.outputs.artifact-id }}
           ASSET_FILE: "${{ steps.create-distro.outputs.asset-name }}"
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -83,7 +84,7 @@ jobs:
              const uploadAsset = await github.request({
               method: "POST",
               url: upload_url,
-              name: '${{ steps.build-with-maven.outputs.jar-asset }}',
+              name: ASSET_NAME,
               headers: {
                 "content-type": "application/zip",
               },
