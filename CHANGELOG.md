@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.9](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.8...v0.1.9) (2021-04-23)
+
+
+### Bug Fixes
+
+* remove exit code ([45ccc97](https://www.github.com/kameshsampath/fruits-app/commit/45ccc975dbc462d7dc17638020445da776b48f58))
+
 ### [0.1.8](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.7...v0.1.8) (2021-04-23)
 
 
