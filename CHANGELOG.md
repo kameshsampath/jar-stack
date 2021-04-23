@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.10](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.9...v0.1.10) (2021-04-23)
+
+
+### Bug Fixes
+
+* add ASSET name ([473c9de](https://www.github.com/kameshsampath/fruits-app/commit/473c9de708343fcf30f98b0c9761ddd0fd7c0fb5))
+
 ### [0.1.9](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.8...v0.1.9) (2021-04-23)
 
 
