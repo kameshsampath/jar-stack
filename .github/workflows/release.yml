@@ -77,8 +77,6 @@ jobs:
                console.error("Error getting release %s", JSON.stringify(err.errors))
              })
 
-             // console.log("Release ->  %s",JSON.stringify(data))
-
              const upload_url = data.upload_url
 
              const uploadAsset = await github.request({
