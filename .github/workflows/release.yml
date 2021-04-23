@@ -45,10 +45,9 @@ jobs:
       - name: "Quarkus App Tar ball"
         id: create-distro
         env:
-          ARTIFACT_VERSION: ${{ steps.build-with-maven.outputs.artifact_version }}"
-          ARTIFACT_ID: "${{ steps.build-with-maven.outputs.artifact-id }}"
+          ARTIFACT_ID: "${{ steps.build-with-maven.outputs.artifact_id }}"
         run: |
-          TAR_FILE="${{ github.workspace }}/$ARTIFACT_ID-$ARTIFACT_VERSION.tar.gz"
+          TAR_FILE="${{ github.workspace }}/$ARTIFACT_VERSION.tar.gz"
           cd target \
             && tar -cvzf $TAR_FILE lib *-runner*
           echo "::set-output name=asset-name::${TAR_FILE}"
@@ -81,17 +80,14 @@ jobs:
 
              const upload_url = data.upload_url
 
-             const contentLength = fs.statSync(ASSET_FILE).size;
-             console.log("%s Content length=%s", ASSET_FILE, contentLength)
-
-             const uploadAsset = await github.rest.repos.uploadReleaseAsset({
-             url: upload_url,
-             name: '${{ steps.build-with-maven.outputs.jar-asset }}',
-             headers: {
-               "content-type": "application/zip",
-               "content-length": contentLength,
-             },
-             data: fs.readFileSync(ASSET_FILE)
+             const uploadAsset = await github.request({
+              method: "POST",
+              url: upload_url,
+              name: '${{ steps.build-with-maven.outputs.jar-asset }}',
+              headers: {
+                "content-type": "application/zip",
+              },
+              data: fs.readFileSync(ASSET_FILE)
              }).catch(err => {
                console.log("Error uploading asset %s", err)
              })
