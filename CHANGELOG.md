@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.5](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.4...v0.1.5) (2021-04-23)
+
+
+### Bug Fixes
+
+* payload extract ([0cb3cba](https://www.github.com/kameshsampath/fruits-app/commit/0cb3cbad5442f6811b120f5db283c1cb2710cded))
+
 ### [0.1.4](https://www.github.com/kameshsampath/fruits-app/compare/v0.1.3...v0.1.4) (2021-04-23)
 
 
