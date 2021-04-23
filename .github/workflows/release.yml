@@ -1,0 +1,80 @@
+name: Release Artifacts
+
+on:
+  release:
+    types:
+      - "released"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+
+      - name: "Set up JDK 11"
+        uses: actions/setup-java@v2
+        with:
+          java-version: "11"
+          distribution: "adopt"
+
+      - name: "Cache m2 repo"
+        id: cache-m2
+        uses: actions/cache@v2.1.5
+        with:
+          # A list of files, directories, and wildcard patterns to cache and restore
+          path: ~/.m2
+          # An explicit key for restoring and saving the cache
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml' )}}
+
+      - name: "Build with Maven"
+        id: build-with-maven
+        run: |
+          ./mvnw -B -DskipTests install --file pom.xml
+          pom_version=$(./mvnw org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -q \
+                        -Dexpression=project.version -DforceStdout)
+          echo "POM Version $pom_version"
+          artifact_id=$(./mvnw org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -q \
+                        -Dexpression=project.build.finalName -DforceStdout)
+          artifact="$artifact-runner.jar"
+          echo "Artifact $artifact"
+          echo "::set-output name=jar-asset::$artifact"
+      
+      - name: "Attach Artifacts to Release"
+        uses: actions/github-script@v4.0.1
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+             const fs = require('fs')
+             
+             console.log("Context ->  %s",JSON.stringfy(context))
+
+              const { data } = await octokit.request('GET /repos/${context.repo.owner}/${context.repo.repo}/releases/tags/{tag}', {
+                tag: "${{ github.event.tag_name }}"
+              }).catch(err => {
+                console.error("Error getting release %s", JSON.stringify(err.errors))
+              })
+
+              const upload_url = data.upload_url
+              
+              const filePath = "target/${{ steps.build-with-maven.outputs.jar-asset }}"
+              const contentLength = fs.statSync(filePath).size;
+              console.log("%s Content length=%s", filePath, contentLength)
+
+              const uploadAsset = await github.rest.repos.uploadReleaseAsset({
+              url: upload_url,
+              name: '${{ steps.build-with-maven.outputs.jar-asset }}',
+              headers: {
+                "content-type": "application/zip",
+                "content-length": contentLength,
+              },
+              data: fs.readFileSync(filePath)
+              }).catch(err => {
+                console.log("Error uploading asset %s", err)
+              })
+
+              console.log("Asset upload --> "uploadAsset)
+
+          
