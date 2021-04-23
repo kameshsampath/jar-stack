@@ -32,20 +32,32 @@ jobs:
         id: build-with-maven
         run: |
           ./mvnw -B -DskipTests install --file pom.xml
-          pom_version=$(./mvnw org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -q \
+          artifact_version=$(./mvnw org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -q \
                         -Dexpression=project.version -DforceStdout)
           echo "POM Version $pom_version"
           artifact_id=$(./mvnw org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -q \
                         -Dexpression=project.build.finalName -DforceStdout)
           artifact="$artifact_id-runner.jar"
           echo "Project Artifact $artifact"
-          echo "::set-output name=jar-asset::$artifact"
+          echo "::set-output name=artifact-version::$artifact_version"
+          echo "::set-output name=artifact-id::$artifact_id"
+
+      - name: "Quarkus App Tar ball"
+        id: create-distro
+        env:
+          ARTIFACT_VERSION: ${{ steps.build-with-maven.outputs.artifact_version }}"
+          ARTIFCT_ID: "${{ steps.build-with-maven.outputs.artifact-id }}"
+        run: |
+          TAR_FILE="${{ github.workspace }}/${ARTIFCT_ID}-${ARTIFACT_VERSION}.tar.gz"
+          cd target \
+            && tar -cvzf $TAR_FILE lib *-runner*
+          echo "::set-output name=asset-name::${TAR_FILE}"
 
       - name: "Attach Artifacts to Release"
         uses: actions/github-script@v4.0.1
         env:
-          TAG_NAME: ${{ github.event.tag_name }}
-          ASSET_FILE: "target/${{ steps.build-with-maven.outputs.jar-asset }}"
+          TAG_NAME: ${{ github.event.release.tag_name }}
+          ASSET_FILE: "${{ steps.create-distro.asset-name }}"
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
