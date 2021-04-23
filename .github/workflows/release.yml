@@ -52,8 +52,8 @@ jobs:
             const fs = require('fs')
             const {TAG_NAME} = process.env
             const {ASSET_FILE} = process.env
-            
-            console.log("Context ->  %s",JSON.stringfy(context))
+
+            console.log("Context ->  %s",JSON.stringify(context))
 
              const { data } = await octokit.request('GET /repos/${context.repo.owner}/${context.repo.repo}/releases/tags/{tag}', {
                tag: TAG_NAME
