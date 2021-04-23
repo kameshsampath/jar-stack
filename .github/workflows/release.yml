@@ -64,6 +64,7 @@ jobs:
             const fs = require('fs')
             const {TAG_NAME} = process.env
             const {ASSET_FILE} = process.env
+            const {ASSET_NAME} = process.env
             const {payload} = context
 
             const owner = payload.repository.owner.login
@@ -82,7 +83,7 @@ jobs:
              const uploadAsset = await github.request({
               method: "POST",
               url: upload_url,
-              name: ASSET_NAME,
+              name: `${ASSET_NAME}.tar.gz`,
               headers: {
                 "content-type": "application/zip",
               },
