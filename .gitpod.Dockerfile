@@ -1,8 +1,8 @@
 FROM gitpod/workspace-full
 
-RUN sudo apt-get -y upgrade \
-    && sudo apt-get -y update \
-    && sudo apt-get -y install podman build-essential libz-dev zlib1g-dev \
+# TODO install podman and do in container builds
+RUN sudo apt-get -y update \
+    && sudo apt-get -y install build-essential libz-dev zlib1g-dev \
     && mkdir -p ~/.local/share/fonts \
     && mkdir -p ~/.local/share/fonts \
     && cd ~/.local/share/fonts \
@@ -14,4 +14,6 @@ RUN sudo apt-get -y upgrade \
     && ~/graalvm/bin/gu --auto-yes install native-image
 
 ENV GRAALVM_HOME=~/graalvm
+ENV JAVA_HOME=~/graalvm
 ENV QUARKUS_NATIVE_CONTAINER_RUNTIME=podman
+ENV PATH="${GRAALVM_HOME}/bin:${PATH}"
