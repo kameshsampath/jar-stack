@@ -13,7 +13,6 @@ RUN sudo apt-get -y update \
     && tar -xzf /tmp/graalvm-ce-amd64.tar.gz -C ~/graalvm --strip-components=1 \
     && ~/graalvm/bin/gu --auto-yes install native-image
 
-ENV GRAALVM_HOME=~/graalvm
-ENV JAVA_HOME=~/graalvm
-ENV QUARKUS_NATIVE_CONTAINER_RUNTIME=podman
+ENV GRAALVM_HOME="${HOME}/graalvm"
+ENV JAVA_HOME="${GRAALVM_HOME}"
 ENV PATH="${GRAALVM_HOME}/bin:${PATH}"
