@@ -15,4 +15,6 @@ RUN sudo apt-get -y update \
 
 ENV GRAALVM_HOME="${HOME}/graalvm"
 ENV JAVA_HOME="${GRAALVM_HOME}"
-ENV PATH="${GRAALVM_HOME}/bin:${PATH}"
+ENV PATH  "${GRAALVM_HOME}/bin:${PATH}"
+
+RUN echo "export PATH=\"\${GRAALVM_HOME}/bin\":\$PATH" >> /home/gitpod/.bashrc
