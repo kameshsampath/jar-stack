@@ -1,6 +1,10 @@
 image:
   file: .gitpod.Dockerfile
 
+github:
+  prebuilds:
+    master: true
+    
 vscode:
   extensions:
     - "editorconfig.editorconfig"

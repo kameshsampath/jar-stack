@@ -1,4 +1,6 @@
-# fruits-app project
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/kameshsampath/fruits-app)
+
+# Quarkus Fruits App
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
