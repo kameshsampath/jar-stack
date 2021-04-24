@@ -1,0 +1,14 @@
+vscode:
+  extensions:
+    - "editorconfig.editorconfig"
+    - "redhat.vscode-quarkus"
+    - "redhat.vscode-yaml"
+    - "ms-vscode.sublime-keybindings"
+    - "dracula-theme.theme-dracula"
+ports:
+  - port: 8080
+    onOpen: open-preview
+    visibility: public
+
+tasks:
+- init: ./mvnw -B -DskipTests clean install
