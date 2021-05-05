@@ -1,0 +1,50 @@
+{
+  "workbench.colorTheme": "Dracula",
+  "editor.fontSize": 16,
+  "editor.fontFamily": "FiraCode Nerd Font Mono",
+  "editor.fontLigatures": true,
+  "editor.fontWeight": "300",
+  "editor.letterSpacing": 1.2,
+  "terminal.integrated.fontFamily": "FiraCode Nerd Font Mono",
+  "terminal.integrated.fontSize": 16,
+  "terminal.integrated.fontWeight": "300",
+  "window.zoomLevel": 1,
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "keep",
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    }
+  },
+  "yaml.schemaStore.enable": true,
+  "yaml.schemas": {
+    "ansible": "globPattern",
+    "Kubernetes": "globPattern"
+  },
+  "editor.foldingStrategy": "indentation",
+  "workbench.settings.editor": "ui",
+  "[quarkus-properties]": {
+    "editor.formatOnPaste": false,
+  },
+  "[microprofile-properties]": {
+    "editor.formatOnPaste": false,
+  },
+  "git.autofetch": true,
+  "quarkus.tools.debug.terminateProcessOnExit": "Always terminate",
+  "editor.minimap.enabled": false,
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.factorypath": true,
+    "**/.idea": true,
+    "**/.iml": true,
+    "**/.mvn": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.vscode": true
+  },
+  "java.configuration.updateBuildConfiguration": "automatic"
+}
