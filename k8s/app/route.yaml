@@ -1,0 +1,12 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: fruits-app
+spec:
+  to:
+    kind: Service
+    name: fruits-app
+    weight: 100
+  port:
+    targetPort: 8080
+  wildcardPolicy: None
