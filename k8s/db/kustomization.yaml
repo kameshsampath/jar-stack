@@ -1,0 +1,5 @@
+
+resources:
+  - 01-postgresql-catalogsource.yaml
+  - 02-subscription.yaml
+  - 03-postgresql.yaml

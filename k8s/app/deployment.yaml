@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fruits-app
+  labels:
+    app: fruits-app
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: fruits-app
+      labels:
+        app: fruits-app
+    spec:
+      containers:
+        - name: fruit-app
+          image: quay.io/kameshsampath/fruits-app
+          imagePullPolicy: Always
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: fruits-app

@@ -1,0 +1,9 @@
+---
+apiVersion: postgresql.baiju.dev/v1alpha1
+kind: Database
+metadata:
+  name: quarkus-sbo
+spec:
+  image: docker.io/postgres
+  imageName: postgresql
+  dbName: fruitsdb
