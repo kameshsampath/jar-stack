@@ -45,5 +45,6 @@
     "**/.project": true,
     "**/.settings": true,
     "**/.vscode": true
-  }
+  },
+  "java.configuration.updateBuildConfiguration": "automatic"
 }
