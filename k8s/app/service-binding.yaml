@@ -1,0 +1,18 @@
+apiVersion: binding.operators.coreos.com/v1alpha1
+kind: ServiceBinding
+metadata:
+  name: example-servicebinding
+spec:
+  application:
+    group: apps
+    kind: Deployment
+    name: fruits-app-5
+    resource: deployments
+    version: v1
+  bindAsFiles: true
+  services:
+    - group: postgresql.baiju.dev
+      id: db
+      kind: Database
+      name: quarkus-sbo
+      version: v1alpha1
