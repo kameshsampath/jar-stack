@@ -6,7 +6,7 @@ spec:
   application:
     group: apps
     kind: Deployment
-    name: fruits-app-5
+    name: fruits-app
     resource: deployments
     version: v1
   bindAsFiles: true
