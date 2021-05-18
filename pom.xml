@@ -18,8 +18,11 @@
     <quarkus.platform.version>1.13.3.Final</quarkus.platform.version>
     <surefire-plugin.version>2.22.1</surefire-plugin.version>
     <skipTests>true</skipTests>
-    <jkube.image.name>quay.io/kameshsampath/%a</jkube.image.name>
-    <jjkube.docker.imagePullPolicy>Always</jjkube.docker.imagePullPolicy>
+    <!--- JKube config -->
+    <!-- Not working with jib + quay.io -->
+    <!-- jkube.build.strategy>jib</jkube.build.strategy -->
+    <jkube.generator.name>quay.io/kameshsampath/%a:%v</jkube.generator.name>
+    <jkube.docker.imagePullPolicy>Always</jkube.docker.imagePullPolicy>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -118,19 +121,18 @@
         <groupId>org.eclipse.jkube</groupId>
         <artifactId>kubernetes-maven-plugin</artifactId>
         <version>1.3.0</version>
-        <configuration>
-          <images>
-            <image>
-              <name>${jkube.image.name}</name>
-              <build>
-              <tags>
-                <tag>latest</tag>
-                <tag>${project.version}</tag>
-              </tags>
-              </build>
-            </image>
-          </images>
-        </configuration>
+        <executions>
+          <execution>
+            <id>all</id>
+            <phase>package</phase>
+            <goals>
+              <goal>resource</goal>
+              <goal>helm</goal>
+              <goal>build</goal>
+              <goal>push</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

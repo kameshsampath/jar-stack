@@ -1,1 +1,0 @@
-src/main/docker/Dockerfile.fast-jar
