@@ -17,6 +17,9 @@
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
     <quarkus.platform.version>1.13.3.Final</quarkus.platform.version>
     <surefire-plugin.version>2.22.1</surefire-plugin.version>
+    <skipTests>true</skipTests>
+    <jkube.image.name>quay.io/kameshsampath/%a</jkube.image.name>
+    <jjkube.docker.imagePullPolicy>Always</jjkube.docker.imagePullPolicy>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -79,10 +82,6 @@
       <artifactId>rest-assured</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-openshift</artifactId>
-    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -113,6 +112,24 @@
             <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
             <maven.home>${maven.home}</maven.home>
           </systemPropertyVariables>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.jkube</groupId>
+        <artifactId>kubernetes-maven-plugin</artifactId>
+        <version>1.3.0</version>
+        <configuration>
+          <images>
+            <image>
+              <name>${jkube.image.name}</name>
+              <build>
+              <tags>
+                <tag>latest</tag>
+                <tag>${project.version}</tag>
+              </tags>
+              </build>
+            </image>
+          </images>
         </configuration>
       </plugin>
     </plugins>
