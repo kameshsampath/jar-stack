@@ -20,7 +20,7 @@
     <skipTests>true</skipTests>
     <!--- JKube config -->
     <!-- Not working with jib + quay.io -->
-    <!-- jkube.build.strategy>jib</jkube.build.strategy -->
+    <jkube.build.strategy>jib</jkube.build.strategy>
     <jkube.generator.name>quay.io/kameshsampath/%a:%v</jkube.generator.name>
     <jkube.enricher.jkube-controller.pullPolicy>Always</jkube.enricher.jkube-controller.pullPolicy>
   </properties>
