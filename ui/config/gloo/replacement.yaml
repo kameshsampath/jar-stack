@@ -1,0 +1,15 @@
+source:
+  kind: Service
+  fieldPath: fruits-app-ui
+targets:
+  - select:
+      version: v1
+      group: gloo.solo.io
+      kind: Upstream
+    fieldPaths:
+  - select:
+      version: v1
+      group: gloo.solo.io
+      kind: VirtualService
+    fieldPaths:
+

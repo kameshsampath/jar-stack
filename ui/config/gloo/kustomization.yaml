@@ -1,0 +1,15 @@
+namespace: gloo-system
+
+commonLabels:
+  app: fruits-app-ui
+  version: v1.0
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+resources:
+- upstream.yaml
+- virtual-service.yaml
+
+# replacements:
+#   - path: replacement.yaml

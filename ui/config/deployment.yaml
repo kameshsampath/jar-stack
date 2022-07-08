@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fruits-app-ui
+spec:
+  selector:
+    matchLabels:
+      app: fruits-app-ui
+  template:
+    metadata:
+      labels:
+        app: fruits-app-ui
+    spec:
+      serviceAccountName: fruits-app-ui
+      volumes:
+        - name: ui-config
+          configMap:
+            name: ui-config
+            items:
+              - key: .env
+                path: .env
+      containers:
+      - name: fruits-app-ui
+        image: ghcr.io/kameshsampath/fruits-app-ui
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+          - mountPath: /app/.env
+            name: ui-config
+            subPath: .env
+

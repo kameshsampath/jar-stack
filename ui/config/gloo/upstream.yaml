@@ -1,0 +1,17 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: fruits-app-fruits-api-8080
+spec:
+  discoveryMetadata:
+    labels:
+      app: fruits-app-ui
+      version: v1.0
+  kube:
+    selector:
+      app: fruits-api
+      version: v1.0
+    serviceName: fruits-app-ui
+    serviceNamespace: fruits-app
+    servicePort: 8080
+

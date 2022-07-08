@@ -1,0 +1,17 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: fruits-app-ui
+spec:
+  displayName: Fruits UI
+  virtualHost:
+    domains:
+      - "*"
+    routes:
+      - matchers:
+          - prefix: /
+        routeAction:
+          single:
+            upstream:
+              name: fruits-app-fruits-ui-8080
+              namespace: gloo-system

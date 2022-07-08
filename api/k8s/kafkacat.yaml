@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafkacat
+  labels:
+    app: kafkacat
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: kafkacat
+      labels:
+        app: kafkacat
+    spec:
+      containers:
+        - name: kafkacat
+          image: docker.io/confluentinc/cp-kafkacat
+          imagePullPolicy: IfNotPresent
+          command:
+            - tail
+            - -f
+            - /dev/null
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: kafkacat
