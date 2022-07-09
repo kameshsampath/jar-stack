@@ -1,0 +1,92 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+environment: &buildEnv
+  DOCKERFILE: Dockerfile
+  GOOGLE_APPLICATION_CREDENTIALS: /kaniko/sa.json
+  SERVICE_ACCOUNT_JSON:
+    from_secret: service_account_json
+  DESTINATION_IMAGE:
+    from_secret: destination_image
+
+# remove this section if your CPU is amd64
+platform:
+  os: linux
+  arch: arm64
+
+steps:
+  - name: java-test
+    image: quay.io/kameshsampath/drone-java-maven-plugin
+    pull: if-not-present
+    settings:
+      context_dir: /drone/src/api
+      maven_mirror_url:
+        from_secret: maven_mirror_url
+      goals:
+        - -B
+        - clean
+        - test
+  - name: java-build
+    image: quay.io/kameshsampath/drone-java-maven-plugin
+    settings:
+      context_dir: /drone/src/api
+      log_level: debug
+      maven_mirror_url:
+        from_secret: maven_mirror_url
+      goals:
+        - -B
+        - clean
+        - -DskipTests
+        - install
+
+  - name: build-image
+    image: gcr.io/kaniko-project/executor:debug
+    pull: if-not-present
+    environment: *buildEnv
+    commands:
+      - echo "$SERVICE_ACCOUNT_JSON" >  "$GOOGLE_APPLICATION_CREDENTIALS"
+      - >
+        /kaniko/executor 
+        --context /drone/src/api 
+        --dockerfile $DOCKERFILE 
+        --destination $DESTINATION_IMAGE 
+        --customPlatform=linux/amd64
+
+  - name: config-gcloud-cli
+    image: quay.io/kameshsampath/drone-gcloud-auth
+    pull: if-not-present
+    settings:
+      google_application_credentials:
+        from_secret: service_account_json
+      google_cloud_project:
+        from_secret: google_cloud_project
+      registries:
+        - asia.gcr.io
+    volumes:
+      - name: gcloud-config
+        path: /home/dev/.config/gcloud
+
+  - name: deploy-api
+    image: quay.io/kameshsampath/drone-gcloud-run
+    pull: if-not-present
+    settings:
+      service_account_json:
+        from_secret: service_account_json
+      project:
+        from_secret: google_cloud_project
+      region:
+        from_secret: gcp_region
+      service_name: fruits-api
+      image:
+        from_secret: destination_image
+    volumes:
+      - name: gcloud-config
+        path: /home/dev/.config/gcloud
+
+volumes:
+  - name: gcloud-config
+    temp: {}
+  - name: digest-folder
+    temp: {}

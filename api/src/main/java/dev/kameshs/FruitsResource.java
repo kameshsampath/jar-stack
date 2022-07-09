@@ -10,7 +10,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -19,14 +18,17 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 @Consumes(MediaType.APPLICATION_JSON)
 public class FruitsResource {
 
-  @ConfigProperty(name = "my.fruit", defaultValue = "apple")
+  @ConfigProperty(name = "my.fruit", defaultValue = "Apple")
   String defaultFruit;
 
   @GET
   @Path("/fruits/default")
   public Response defaultFruit() {
+    Fruit fruit = Fruit
+        .find("name", defaultFruit)
+        .firstResult();
     return Response
-        .ok(defaultFruit)
+        .ok(fruit)
         .build();
   }
 
@@ -59,14 +61,15 @@ public class FruitsResource {
   @DELETE
   @Path("/fruits/{id}")
   @Transactional
-  public Response deleteFruit(@PathParam("id") long id) {
+  public Response deleteFruit(@PathParam("id") Long id) {
     Fruit fruit = Fruit.findById(id);
 
     if (fruit == null) {
-      Response
+      return Response
           .status(404, String.format("Fruit does not exist"))
           .build();
     }
+
     fruit.delete();
     return Response
         .noContent()
