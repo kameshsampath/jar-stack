@@ -75,3 +75,4 @@ yarn-error.log*
 # add vscode settings
 !.vscode
 *.code-workspace
+!.env.example
