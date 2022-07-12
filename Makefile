@@ -1,6 +1,10 @@
+SECRET_FILE = secret.harness
 
 app-deploy:	## Runs Drone Pipeline using drone exec and deploys the API to Google Cloud Run and UI to Vercel
 	@drone exec --secret-file=$(SECRET_FILE) .drone.yml
+
+ui-deploy:	## Deploys site to Vercel
+	@drone exec --secret-file=$(SECRET_FILE) --include=deploy-ui .drone.yml
 
 java-build-and-test:	## Just runs the Java build and test steps
 	@drone exec --secret-file=$(SECRET_FILE) --include=java-test --include=java-build .drone.yml

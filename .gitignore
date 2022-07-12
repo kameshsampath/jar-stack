@@ -76,3 +76,6 @@ yarn-error.log*
 !.vscode
 *.code-workspace
 !.env.example
+secret*
+!secret.example
+ui/cache

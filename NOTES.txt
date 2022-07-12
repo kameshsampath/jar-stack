@@ -1,0 +1,17 @@
+- talk about plugins used
+- sharing of data between steps R/W files
+- secrets
+- YAML Anchors
+- Google Cloud SA JSON
+
+Enable Public Access to API  (only for Demo)
+
+```
+gcloud run services add-iam-policy-binding fruits-api --member="allUsers" --role='roles/run.invoker'
+```
+
+Disable Public Access to API 
+
+```
+gcloud run services remove-iam-policy-binding fruits-api --member='allUsers' --role='roles/run.invoker' --region=asia-south2
+```

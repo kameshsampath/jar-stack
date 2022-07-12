@@ -6,10 +6,8 @@ name: default
 environment: &buildEnv
   DOCKERFILE: Dockerfile
   GOOGLE_APPLICATION_CREDENTIALS: /kaniko/sa.json
-  SERVICE_ACCOUNT_JSON:
-    from_secret: service_account_json
-  DESTINATION_IMAGE:
-    from_secret: destination_image
+  DIGEST_FILE: /tmp/image-digests/digest
+  SERVICE_INFO_FILE: /deploy/service.txt
 
 # remove this section if your CPU is amd64
 platform:
@@ -17,19 +15,9 @@ platform:
   arch: arm64
 
 steps:
-  - name: java-test
-    image: quay.io/kameshsampath/drone-java-maven-plugin
-    pull: if-not-present
-    settings:
-      context_dir: /drone/src/api
-      maven_mirror_url:
-        from_secret: maven_mirror_url
-      goals:
-        - -B
-        - clean
-        - test
   - name: java-build
-    image: quay.io/kameshsampath/drone-java-maven-plugin
+    image: docker.io/kameshsampath/drone-java-maven-plugin:v1.0.0
+    pull: if-not-present
     settings:
       context_dir: /drone/src/api
       log_level: debug
@@ -44,18 +32,27 @@ steps:
   - name: build-image
     image: gcr.io/kaniko-project/executor:debug
     pull: if-not-present
-    environment: *buildEnv
+    environment:
+      <<: *buildEnv
+      SERVICE_ACCOUNT_JSON:
+        from_secret: service_account_json
+      DESTINATION_IMAGE:
+        from_secret: destination_image
     commands:
       - echo "$SERVICE_ACCOUNT_JSON" >  "$GOOGLE_APPLICATION_CREDENTIALS"
       - >
         /kaniko/executor 
         --context /drone/src/api 
-        --dockerfile $DOCKERFILE 
+        --dockerfile $DOCKERFILE
         --destination $DESTINATION_IMAGE 
         --customPlatform=linux/amd64
+        --digest-file=$DIGEST_FILE
+    volumes:
+      - name: digest-folder
+        path: /tmp/image-digests
 
   - name: config-gcloud-cli
-    image: quay.io/kameshsampath/drone-gcloud-auth
+    image: docker.io/kameshsampath/drone-gcloud-auth:v1.0.0
     pull: if-not-present
     settings:
       google_application_credentials:
@@ -69,8 +66,10 @@ steps:
         path: /home/dev/.config/gcloud
 
   - name: deploy-api
-    image: quay.io/kameshsampath/drone-gcloud-run
-    pull: if-not-present
+    image: kameshsampath/drone-gcloud-run:v1.0.1
+    pull: never
+    environment:
+      <<: *buildEnv
     settings:
       service_account_json:
         from_secret: service_account_json
@@ -81,12 +80,50 @@ steps:
       service_name: fruits-api
       image:
         from_secret: destination_image
+      image_digest_file: $DIGEST_FILE
     volumes:
       - name: gcloud-config
         path: /home/dev/.config/gcloud
+      - name: digest-folder
+        path: /tmp/image-digests
+      - name: service-info
+        path: /deploy
+  - name: create environment file for vercel
+    image: ubuntu
+    environment:
+    <<: *buildEnv
+    commands:
+      - printf "FRUITS_API_URI=%s\n" "$(cat /deploy/service.txt)/api" >> /deploy/app.env
+      - cat /deploy/app.env
+    volumes:
+      - name: service-info
+        path: /deploy
+  - name: deploy-ui
+    image: kameshsampath/drone-vercel-deploy:v1.0.1
+    pull: if-not-present
+    environment:
+    <<: *buildEnv
+    settings:
+      vercel_site_dir: /drone/src/ui
+      vercel_token:
+        from_secret: vercel_token
+      vercel_org_id:
+        from_secret: vercel_org_id
+      vercel_project_id:
+        from_secret: vercel_project_id
+      vercel_project_create: true
+      # valid values are development, preview,production
+      vercel_environment: production
+      vercel_environment_variable_file: /deploy/app.env
+      log_level: debug
+    volumes:
+      - name: service-info
+        path: /deploy
 
 volumes:
   - name: gcloud-config
     temp: {}
   - name: digest-folder
+    temp: {}
+  - name: service-info
     temp: {}
