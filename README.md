@@ -1,4 +1,4 @@
-# Java And Reactive(JAR) Stack
+# Java And React(JAR) Stack
 
 A Drone pipeline JAR(Java And Reactive) stack to show build, test and deploy a [Java](https://jdk.java.net/) API with [React](https://reactjs.org/) Frontend with optional DB. 
 
@@ -18,6 +18,11 @@ The stack has the following components,
   - Ability to push to [Google Cloud Registry](https://cloud.google.com/container-registry/)
   
 - Optionally [gcloud CLI](https://cloud.google.com/cli)
+  
+- Drone Desktop Extension,
+  ```shell
+   docker extension install kameshsampath/drone-desktop-extension:v1.0.1
+  ```
 
 ## API Access
 
